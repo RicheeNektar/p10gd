@@ -11,6 +11,7 @@ import {
   Row,
 } from 'react-bootstrap';
 import CardHeader from 'react-bootstrap/esm/CardHeader';
+import { withTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addHistoryEntry,
@@ -23,7 +24,7 @@ import {
   clearErrors,
 } from './RoundOver.slice';
 
-const RoundOver = () => {
+const RoundOver = ({ t }) => {
   const dispatch = useDispatch();
 
   const roundOverVisible = useSelector(state => state.roundOver.visible);
@@ -50,9 +51,9 @@ const RoundOver = () => {
         <div className="card-body">
           <Row>
             <Col>
-              <label htmlFor={pointsInput}>Points:</label>
+              <label htmlFor={pointsInput}>{t('round_over.input.points')}</label>
             </Col>
-            <Col>
+            <Col className="d-flex align-items-center">
               <input
                 id={pointsInput}
                 name={pointsInput}
@@ -75,9 +76,9 @@ const RoundOver = () => {
           </Row>
           <Row>
             <Col>
-              <label htmlFor={phaseInput}>Got phase:</label>
+              <label htmlFor={phaseInput}>{t('round_over.input.phase')}</label>
             </Col>
-            <Col>
+            <Col className="d-flex align-items-center">
               <input
                 id={phaseInput}
                 name={phaseInput}
@@ -133,7 +134,7 @@ const RoundOver = () => {
     <Modal show={roundOverVisible}>
       <form onSubmit={handleSubmit}>
         <ModalHeader>
-          <ModalTitle>Enter points of Players</ModalTitle>
+          <ModalTitle>{t('round_over.modal_title')}</ModalTitle>
         </ModalHeader>
         <ModalBody>
           <CardGroup>{renderSlice(0, 2)}</CardGroup>
@@ -145,13 +146,13 @@ const RoundOver = () => {
             type="button"
             variant="danger"
             onClick={() => dispatch(cancelRoundOver())}>
-            Cancel
+            {t('round_over.cancel')}
           </Button>
-          <Button type="submit">Apply</Button>
+          <Button type="submit">{t('round_over.apply')}</Button>
         </ModalFooter>
       </form>
     </Modal>
   );
 };
 
-export default RoundOver;
+export default withTranslation()(RoundOver);

@@ -14,10 +14,11 @@ import {
   ModalHeader,
 } from 'react-bootstrap';
 import { setSelectedGame } from '../game-stats/GameStats.slice';
+import { withTranslation } from 'react-i18next';
 
-const ERROR_INVALID_PLAYER_COUNT = 'At least 2 player names are required.';
+const ERROR_INVALID_PLAYER_COUNT = 'create_game.form_error.invalid_player_count';
 
-const CreateGame = () => {
+const CreateGame = ({ t }) => {
   const playerNames = useSelector(state => state.createGame.names);
   const formErrors = useSelector(state => state.createGame.errors);
   const createGameModalVisible = useSelector(
@@ -32,13 +33,13 @@ const CreateGame = () => {
     playerNameInputs.push(
       <Row key={`player-${i}`}>
         <Col>
-          <label>Player {i + 1}'s name</label>
+          <label>{t('create_game.player.label', {number: i + 1})}</label>
         </Col>
         <Col>
           <input
             name={`player-${i}`}
             type="text"
-            placeholder={`Player ${i + 1}`}
+            placeholder={t('create_game.player.placeholder', {number: i + 1})}
             onChange={e =>
               dispatch(setPlayerName({ id: i, name: e.target.value }))
             }
@@ -71,15 +72,15 @@ const CreateGame = () => {
   return (
     <Modal show={createGameModalVisible}>
       <ModalHeader>
-        <ModalTitle>Create a new game:</ModalTitle>
+        <ModalTitle>{t('create_game.modal_title')}</ModalTitle>
       </ModalHeader>
       <ModalBody>
         {formErrors.length > 0 && (
           <Alert variant="danger" key="errors">
-            <h4>You have errors:</h4>
+            <h4>{t('create_game.form_error', {count: formErrors.length})}</h4>
             <ul>
               {formErrors.map((error, i) => (
-                <li key={i}>{error}</li>
+                <li key={i}>{t(error)}</li>
               ))}
             </ul>
           </Alert>
@@ -96,14 +97,14 @@ const CreateGame = () => {
             dispatch(resetForm());
             dispatch(setGameSelectionModalVisible(true));
           }}>
-          Cancel
+          {t('create_game.actions.cancel')}
         </Button>
         <Button key="continue" type="submit" onClick={handleSubmit}>
-          Create
+        {t('create_game.actions.create')}
         </Button>
       </ModalFooter>
     </Modal>
   );
 };
 
-export default CreateGame;
+export default withTranslation()(CreateGame);

@@ -23,8 +23,9 @@ import {
 import { setSelectedGame } from '../game-stats/GameStats.slice';
 import CardHeader from 'react-bootstrap/esm/CardHeader';
 import { InfoCircleFill } from 'react-bootstrap-icons';
+import { withTranslation } from 'react-i18next';
 
-const GameList = () => {
+const GameList = ({ t }) => {
   const dispatch = useDispatch();
   const deleteModalVisible = useSelector(
     state => state.gameList.deleteModalFor
@@ -46,30 +47,34 @@ const GameList = () => {
     <Fragment>
       <Modal show={deleteModalVisible > -1}>
         <ModalHeader>
-          <ModalTitle>Are you sure?</ModalTitle>
+          <ModalTitle>{t('game_list.delete_game.modal_title')}</ModalTitle>
         </ModalHeader>
-        <ModalBody>Are you sure you want to delete this game?</ModalBody>
+        <ModalBody>{t('game_list.delete_game.text')}</ModalBody>
         <ModalFooter>
-          <Button variant="danger" onClick={() => {
-            dispatch(setSelectedGame(-1));
-            dispatch(deleteGame());
-          }}>
-            Delete
+          <Button
+            variant="danger"
+            onClick={() => {
+              dispatch(setSelectedGame(-1));
+              dispatch(deleteGame());
+            }}
+          >
+            {t('game_list.delete_game.confirm')}
           </Button>
           <Button
             variant="secondary"
             onClick={() => {
               dispatch(showDeleteModal(-1));
               dispatch(setGameSelectionModalVisible(true));
-            }}>
-            Cancel
+            }}
+          >
+            {t('game_list.delete_game.cancel')}
           </Button>
         </ModalFooter>
       </Modal>
 
       <Modal show={gameSelectionModalVisible}>
         <ModalHeader>
-          <ModalTitle>Game</ModalTitle>
+          <ModalTitle>{t('game_list.modal_title')}</ModalTitle>
           <CloseButton
             onClick={() => dispatch(setGameSelectionModalVisible(false))}
           />
@@ -81,9 +86,13 @@ const GameList = () => {
                 .slice(page * itemsPerPage, (page + 1) * itemsPerPage)
                 .map((game, i) => (
                   <Card key={i}>
-                    <CardHeader>Created: {game.time}</CardHeader>
+                    <CardHeader>
+                      {t('game_list.game.created', {time: game.time})} 
+                    </CardHeader>
                     <div className="card-body">
-                      <span>Players: {game.players.join(', ')}</span>
+                      <span>
+                        {t('game_list.game.players', { players: game.players })}
+                      </span>
                     </div>
 
                     <div className="card-footer justify-content-end">
@@ -92,16 +101,18 @@ const GameList = () => {
                           onClick={() => {
                             dispatch(setGameSelectionModalVisible(false));
                             dispatch(setSelectedGame(i));
-                          }}>
-                          Select
+                          }}
+                        >
+                          {t('game_list.action.select')}
                         </Button>
                         <Button
                           variant="danger"
                           onClick={() => {
                             dispatch(setGameSelectionModalVisible(false));
                             dispatch(showDeleteModal(i));
-                          }}>
-                          Delete
+                          }}
+                        >
+                          {t('game_list.action.delete')}
                         </Button>
                       </ListGroup>
                     </div>
@@ -111,7 +122,7 @@ const GameList = () => {
               <Alert variant="info" className="d-flex gap-2 align-items-center">
                 <InfoCircleFill />
                 <div>
-                You did not create a game yet.
+                  {t('game_list.no_games')}
                 </div>
               </Alert>
             )}
@@ -131,8 +142,9 @@ const GameList = () => {
             onClick={() => {
               dispatch(setGameSelectionModalVisible(false));
               dispatch(setModalVisible(true));
-            }}>
-            Create game
+            }}
+          >
+            {t('game_list.action.create_game')}
           </Button>
         </ModalFooter>
       </Modal>
@@ -140,4 +152,4 @@ const GameList = () => {
   );
 };
 
-export default GameList;
+export default withTranslation()(GameList);

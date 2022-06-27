@@ -8,8 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setGameSelectionModalVisible } from './features/game-list/GameList.slice';
 import RoundOver from './features/round-over/RoundOver';
 import { showRoundOverModal } from './features/round-over/RoundOver.slice';
+import { withTranslation } from 'react-i18next';
 
-const App = () => {
+const App = ({ t }) => {
   const dispatch = useDispatch();
   const selectedGame = useSelector(state => state.gameStats.selectedGame);
   const game = useSelector(
@@ -18,7 +19,9 @@ const App = () => {
 
   return (
     <Container className="mt-2">
-      <h1 className="text-center mx-auto w-75">Phase10 GameData</h1>
+      <h1 className="text-center mx-auto w-75">
+        {t('app.title')}
+      </h1>
       <RoundOver />
       <CreateGame />
       <GameList />
@@ -30,10 +33,10 @@ const App = () => {
             }
           }}
           disabled={selectedGame === -1}>
-          Round over
+          {t('app.round_over')}
         </Button>
         <Button onClick={() => dispatch(setGameSelectionModalVisible(true))}>
-          Show games
+          {t('app.show_games')}
         </Button>
       </div>
       <GameStats />
@@ -41,4 +44,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default withTranslation()(App);
