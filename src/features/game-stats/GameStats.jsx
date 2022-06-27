@@ -1,12 +1,14 @@
+import { t } from 'i18next';
 import React, { Fragment } from 'react';
 import { Alert, Card, CardGroup, Col, Row } from 'react-bootstrap';
 import { DashSquare, InfoCircleFill, PlusSquare } from 'react-bootstrap-icons';
 import CardHeader from 'react-bootstrap/esm/CardHeader';
+import { withTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 const colors = ['#FFD700', '#C0C0C0', '#CD7F32'];
 
-const GameStats = () => {
+const GameStats = ({ t }) => {
   const selectedGameId = useSelector(state => state.gameStats.selectedGame);
   const game = useSelector(state => state.gameList.games[selectedGameId]);
 
@@ -17,7 +19,7 @@ const GameStats = () => {
     return (
       <Alert variant="info" className="d-flex gap-2 align-items-center">
         <InfoCircleFill />
-        <div>Select or create a game first.</div>
+        <div>{t("game_stats.no_game_selected")}</div>
       </Alert>
     );
   }
@@ -96,13 +98,13 @@ const GameStats = () => {
           </h5>
         </CardHeader>
         <div className="card-body">
-          <p>Points: {stats.points}</p>
+          <p>{t('game_stats.player_stats.points', {count: stats.points})}</p>
           <p>
             {stats.phase < 10
-              ? `Needs phase ${stats.phase + 1} from 10`
-              : 'Completed all phases'}
+              ? t('game_stats.player_stats.in_progress', {count: stats.phase + 1})
+              : t('game_stats.player_stats.finished')}
           </p>
-          <p>Progress:</p>
+          <p>{t('game_stats.player_stats.progress')}</p>
           <div className="progress">
             {renderProgressBars(Math.min(stats.phase, 10))}
           </div>
@@ -114,10 +116,10 @@ const GameStats = () => {
 
   return (
     <Fragment>
-      <h4 className="m-3">Game stats:</h4>
+      <h4 className="m-3">{t('game_stats.game_stats')}</h4>
       {renderGroup(0, 3)}
       {renderGroup(3, 6)}
-      <h4 className="m-3">Game history:</h4>
+      <h4 className="m-3">{t('game_stats.game_history')}</h4>
       <div className="row">
         <Row className={rowClass}>
           {players.map(name => {
@@ -153,4 +155,4 @@ const GameStats = () => {
   );
 };
 
-export default GameStats;
+export default withTranslation()(GameStats);
