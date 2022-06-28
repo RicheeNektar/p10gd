@@ -24,6 +24,8 @@ import { setSelectedGame } from '../game-stats/GameStats.slice';
 import CardHeader from 'react-bootstrap/esm/CardHeader';
 import { InfoCircleFill } from 'react-bootstrap-icons';
 import { withTranslation } from 'react-i18next';
+import { setExportModalVisible } from '../export-games/Export.slice';
+import { setImportModalVisible } from '../import-games/Import.slice';
 
 const GameList = ({ t }) => {
   const dispatch = useDispatch();
@@ -87,7 +89,7 @@ const GameList = ({ t }) => {
                 .map((game, i) => (
                   <Card key={i}>
                     <CardHeader>
-                      {t('game_list.game.created', {time: game.time})} 
+                      {t('game_list.game.created', { time: game.time })}
                     </CardHeader>
                     <div className="card-body">
                       <span>
@@ -121,9 +123,7 @@ const GameList = ({ t }) => {
             ) : (
               <Alert variant="info" className="d-flex gap-2 align-items-center">
                 <InfoCircleFill />
-                <div>
-                  {t('game_list.no_games')}
-                </div>
+                <div>{t('game_list.no_games')}</div>
               </Alert>
             )}
           </ListGroup>
@@ -138,6 +138,26 @@ const GameList = ({ t }) => {
           </Pagination>
         </ModalBody>
         <ModalFooter>
+          {games.length > 0 ? (
+            <Button
+              onClick={() => {
+                dispatch(setGameSelectionModalVisible(false));
+                dispatch(setExportModalVisible(true));
+              }}
+            >
+              {t('game_list.action.export')}
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                dispatch(setGameSelectionModalVisible(false));
+                dispatch(setImportModalVisible(true));
+              }}
+            >
+              {t('game_list.action.import')}
+            </Button>
+          )}
+
           <Button
             onClick={() => {
               dispatch(setGameSelectionModalVisible(false));

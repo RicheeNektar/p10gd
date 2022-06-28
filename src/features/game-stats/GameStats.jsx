@@ -1,4 +1,3 @@
-import { t } from 'i18next';
 import React, { Fragment } from 'react';
 import { Alert, Card, CardGroup, Col, Row } from 'react-bootstrap';
 import { DashSquare, InfoCircleFill, PlusSquare } from 'react-bootstrap-icons';

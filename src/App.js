@@ -9,6 +9,9 @@ import { setGameSelectionModalVisible } from './features/game-list/GameList.slic
 import RoundOver from './features/round-over/RoundOver';
 import { showRoundOverModal } from './features/round-over/RoundOver.slice';
 import { withTranslation } from 'react-i18next';
+import Export from './features/export-games/Export';
+import Import from './features/import-games/Import';
+import 'webrtc-adapter';
 
 const App = ({ t }) => {
   const dispatch = useDispatch();
@@ -22,6 +25,8 @@ const App = ({ t }) => {
       <h1 className="text-center mx-auto w-75">
         {t('app.title')}
       </h1>
+      <Import />
+      <Export />
       <RoundOver />
       <CreateGame />
       <GameList />
