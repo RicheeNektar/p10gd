@@ -17,10 +17,10 @@ import { setExportModalVisible } from './Export.slice';
 import { setGameSelectionModalVisible } from '../game-list/GameList.slice';
 import { useState } from 'react';
 import { setImportModalVisible } from '../import-games/Import.slice';
-import QRCode from '../qr-code/QRCode';
+import QRCode from 'react-qr-code';
 import { gzipSync } from 'react-zlib-js';
 
-const hexPerCode = 2048;
+const hexPerCode = 64;
 
 const Export = ({ t }) => {
   const dispatch = useDispatch();
@@ -58,10 +58,11 @@ const Export = ({ t }) => {
       <ModalBody className="justify-content-center">
         <QRCode
           className="position-relative start-50 translate-middle-x"
+          width="100%"
+          height="100%"
           value={JSON.stringify({
             page,
             totalPages,
-            length: hexPerCode,
             data: gamesHex.slice(page * hexPerCode, (page + 1) * hexPerCode),
           })}
         />

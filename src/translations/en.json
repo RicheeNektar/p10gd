@@ -39,6 +39,8 @@
     "create_game.form_error_other": "You got multiple errors:",
     "create_game.form_error.invalid_player_count": "At least 2 player names are required.",
     "create_game.actions.create": "Create",
-    "create_game.actions.cancel": "Cancel"
+    "create_game.actions.cancel": "Cancel",
+
+    "import_modal.read_status.success": "Page {{page, number}} read successfully."
   }
 }

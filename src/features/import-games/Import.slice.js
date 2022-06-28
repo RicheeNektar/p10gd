@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   modalVisible: false,
+  importData: [],
 };
 
 const slice = createSlice({
@@ -11,9 +12,15 @@ const slice = createSlice({
     setImportModalVisible: (state, { payload: visible }) => {
       state.modalVisible = visible;
     },
+    setPageData: (state, { payload: { page, data }}) => {
+      state.importData[page] = data;
+    },
+    resetPageData: state => {
+      state.importData = [];
+    },
   },
 });
 
-export const { setImportModalVisible } = slice.actions;
+export const { setImportModalVisible, setPageData, resetPageData } = slice.actions;
 
 export default slice.reducer;

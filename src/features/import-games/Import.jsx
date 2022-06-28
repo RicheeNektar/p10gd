@@ -12,46 +12,55 @@ import { withTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { setGameSelectionModalVisible } from '../game-list/GameList.slice';
 import { setExportModalVisible } from '../export-games/Export.slice';
-import { setImportModalVisible } from './Import.slice';
+import { resetPageData, setImportModalVisible, setPageData } from './Import.slice';
 import { QrReader } from 'react-qr-reader';
 import { useState } from 'react';
+import { gunzipSync } from 'react-zlib-js';
+import { Buffer } from 'buffer';
 
 const Export = ({ t }) => {
   const dispatch = useDispatch();
   const show = useSelector(state => state.import.modalVisible);
   const gamesLength = useSelector(state => state.gameList.games?.length);
+  const gameData = useSelector(state => state.import.importData);
+  
+  const readPages = gameData.length;
 
-  const [totalPages, setTotalPages] = useState(0);
-  const gameData = [];
+  const [message, setMessage] = useState('');
+  const [totalPages, setTotalPages] = useState(-1);
 
   const parseData = () =>
-    new Promise(resolve => {
-      resolve(
-        JSON.parse(Buffer.from(gameData.join(''), 'base64').toString('utf-8'))
-      );
-    });
+    JSON.parse(
+      gunzipSync(Buffer.from(gameData.join(''), 'base64')).toString('utf-8')
+    );
 
   const setDataForPage = (page, data) => {
     gameData[page] = data;
-    parseData()
-      .then(data => {
-        console.log(data);
-      })
-      .catch(() => {});
+
+    if (gameData.length - 1 === totalPages) {
+      try {
+        console.log(parseData());
+      } catch (e) {
+        setMessage("An error occurred: " + e.message);
+      }
+    }
   };
-  
+
   const handleQRData = qrData => {
     if (!qrData) {
       return;
     }
 
-    const { page, qrTotalPages, data } = qrData;
+    const { page, totalPages: qrTotalPages, data } = JSON.parse(qrData);
+
+    setMessage(t('import_modal.read_status.success', { page: page + 1 }));
 
     if (totalPages !== qrTotalPages) {
+      dispatch(resetPageData());
       setTotalPages(qrTotalPages);
     }
 
-    setDataForPage(page, data);
+    dispatch(setPageData({ page, data }));
   };
 
   const handleClose = () => dispatch(setImportModalVisible(false));
@@ -73,12 +82,16 @@ const Export = ({ t }) => {
         <CloseButton onClick={handleClose} />
       </ModalHeader>
       <ModalBody className="justify-content-center">
-        {show && (
+        <p>{message}</p>
+        <p>
+          Read {readPages} / {totalPages + 1}
+        </p>
+        {show && readPages - 1 !== totalPages && (
           <QrReader
             constraints={{
               aspectRatio: 1,
               frameRate: 10,
-              facingMode: 'back',
+              facingMode: 'front',
             }}
             onResult={handleQRData}
           />
