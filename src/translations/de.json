@@ -8,6 +8,7 @@
     "game_stats.game_stats": "Spielübersicht",
     "game_stats.player_stats.points": "Hat {points, plural, =0 {keine} other {#}} Punkte",
     "game_stats.player_stats.in_progress": "Benötigt Phase {phase} von 10",
+    "game_stats.player_stats.finished": "Hat alle Phasen geschafft",
     "game_stats.player_stats.progress": "Fortschritt:",
 
     "game_stats.game_history": "Punkteverlauf",
@@ -50,6 +51,7 @@
     "import_modal.page_progress.undefined": "Scanne unächst einen QR-Code der Export Seite ein.",
     "import_modal.save_game_warning": "Beim import werden alle vorhandenen Spiele gelöscht.",
     "import_modal.page_progress": "{readPages, plural, =0 {Noch keine} other {#}} von {count, plural, =1 {# Seite} other {# Seiten}} gescannt",
+    "import_modal.overwrite": "Daten überschreiben",
     "import_modal.export": "Exportieren",
     "import_modal.back": "Zurück"
   }

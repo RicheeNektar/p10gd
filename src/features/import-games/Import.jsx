@@ -113,7 +113,7 @@ const Export = ({ t }) => {
             constraints={{
               aspectRatio: 1,
               frameRate: 10,
-              facingMode: 'front',
+              facingMode: 'environment',
             }}
             onResult={handleQRData}
           />
