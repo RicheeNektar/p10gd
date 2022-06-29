@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CreateGame from './features/create-game/CreateGame';
 import GameList from './features/game-list/GameList';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Container } from 'react-bootstrap';
 import GameStats from './features/game-stats/GameStats';
 import { useDispatch, useSelector } from 'react-redux';
-import { setGameSelectionModalVisible } from './features/game-list/GameList.slice';
+import { genGuid, setGameSelectionModalVisible } from './features/game-list/GameList.slice';
 import RoundOver from './features/round-over/RoundOver';
 import { showRoundOverModal } from './features/round-over/RoundOver.slice';
 import { withTranslation } from 'react-i18next';
@@ -19,6 +19,13 @@ const App = ({ t }) => {
   const game = useSelector(
     state => state.gameList.games[selectedGame]
   );
+  const guid = useSelector(state => state.gameList.guid);
+
+  useEffect(() => {
+    if (guid === -1) {
+      dispatch(genGuid());
+    }
+  }, []);
 
   return (
     <Container className="mt-2">

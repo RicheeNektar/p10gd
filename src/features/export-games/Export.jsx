@@ -7,8 +7,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalTitle,
-  PageItem,
-  Pagination,
   Spinner,
 } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
@@ -20,20 +18,28 @@ import { useState } from 'react';
 import { setImportModalVisible } from '../import-games/Import.slice';
 import QRCode from 'react-qr-code';
 import { gzipSync } from 'react-zlib-js';
-
-const hexPerCode = 256;
+import { useEffect } from 'react';
+import $ from 'ajax';
 
 const Export = ({ t }) => {
   const dispatch = useDispatch();
   const show = useSelector(state => state.export.modalVisible);
   const games = useSelector(state => state.gameList.games);
 
-  const [page, setPage] = useState(0);
-  const gamesHex = gzipSync(Buffer.from(JSON.stringify(games), 'utf-8')).toString('base64');
-  
-  const totalPages = Math.ceil(gamesHex.length / hexPerCode) - 1;
+  const [loading, setLoading] = useState(true);
+  const [content, setContent] = useState(null);
 
-  const handlePage = p => setPage(Math.max(Math.min(p, totalPages), 0));
+  useEffect(() => {
+    if (loading) {
+      const data = gzipSync(
+        Buffer.from(JSON.stringify(games), 'utf-8')
+      ).toString('base64');
+      $.post('/api/backup', { data }, (res, content) => {
+        setLoading(false);
+        setContent(res);
+      });
+    }
+  }, []);
 
   const handleClose = () => dispatch(setExportModalVisible(false));
 
@@ -54,27 +60,23 @@ const Export = ({ t }) => {
         <CloseButton onClick={handleClose} />
       </ModalHeader>
       <ModalBody>
-        {!gamesHex ? (
-          <div className="d-flex justify-content-center"><Spinner animation="grow"></Spinner></div>
-        ) : (
-          <QRCode
-            className="position-relative start-50 translate-middle-x"
-            width="100%"
-            height="100%"
-            value={JSON.stringify({
-              page,
-              totalPages,
-              data: gamesHex?.slice(page * hexPerCode, (page + 1) * hexPerCode),
-            })}
-          />
-        )}
-        <Pagination className="m-2 justify-content-center">
-          <PageItem onClick={() => handlePage(page - 1)}>«</PageItem>
-          <PageItem>
-            {page + 1} / {totalPages + 1}
-          </PageItem>
-          <PageItem onClick={() => handlePage(page + 1)}>»</PageItem>
-        </Pagination>
+        {
+          loading ? (
+            <div className="d-flex justify-content-center">
+              <Spinner animation="grow"></Spinner>
+            </div>
+          ) : (
+            content
+          )
+          // (
+          //   <QRCode
+          //     className="position-relative start-50 translate-middle-x"
+          //     width="100%"
+          //     height="100%"
+          //     value="some-link"
+          //   />
+          // )
+        }
       </ModalBody>
       <ModalFooter>
         <Button onClick={handleImport}>{t('export_modal.import')}</Button>
