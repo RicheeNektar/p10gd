@@ -12,7 +12,7 @@ const slice = createSlice({
   reducers: {
     createGame: (state, { payload: playerNames }) => {
       state.games.push({
-        time: new Date().toLocaleString('de'),
+        time: new Date(),
         players: playerNames,
         history: [],
       });
@@ -31,6 +31,9 @@ const slice = createSlice({
       console.log(playerData);
       state.games[gameId].history.push(playerData);
     },
+    ovewriteGames: (state, { payload }) => {
+      state.games = payload;
+    },
   },
 });
 
@@ -40,6 +43,7 @@ export const {
   showDeleteModal,
   setGameSelectionModalVisible,
   addHistoryEntry,
+  ovewriteGames,
 } = slice.actions;
 
 export default slice.reducer;

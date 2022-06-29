@@ -9,20 +9,25 @@ import de from './translations/de.json';
 import en from './translations/en.json';
 import { I18nextProvider } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import ICU from 'i18next-icu';
 
-i18n.use(initReactI18next).use(LanguageDetector).init({
-  detection: {
-    order: ["querystring", "path"],
-    lookupQuerystring: 'lang'
-  },
-  resources: {
-    de,
-    en,
-  },
-  whitelist: ['en', 'de'],
-  fallbackLng: 'en',
-  // lng: 'en',
-});
+i18n
+  .use(ICU)
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    detection: {
+      order: ['querystring', 'path'],
+      lookupQuerystring: 'lang',
+    },
+    resources: {
+      de,
+      en,
+    },
+    whitelist: ['en', 'de'],
+    fallbackLng: 'en',
+    // lng: 'en',
+  });
 
 const container = document.getElementById('root');
 const root = createRoot(container);

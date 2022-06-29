@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Alert,
   Button,
   CloseButton,
   Modal,
@@ -10,41 +11,43 @@ import {
 } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { setGameSelectionModalVisible } from '../game-list/GameList.slice';
+import { ovewriteGames, setGameSelectionModalVisible } from '../game-list/GameList.slice';
 import { setExportModalVisible } from '../export-games/Export.slice';
-import { resetPageData, setImportModalVisible, setPageData } from './Import.slice';
+import {
+  resetPageData,
+  setImportModalVisible,
+  setPageData,
+} from './Import.slice';
 import { QrReader } from 'react-qr-reader';
 import { useState } from 'react';
 import { gunzipSync } from 'react-zlib-js';
 import { Buffer } from 'buffer';
+import { useEffect } from 'react';
+import { CheckCircleFill, ExclamationTriangleFill } from 'react-bootstrap-icons';
+import AlertIcon from '../../components/AlertIcon';
+import { setSelectedGame } from '../game-stats/GameStats.slice';
 
 const Export = ({ t }) => {
   const dispatch = useDispatch();
   const show = useSelector(state => state.import.modalVisible);
   const gamesLength = useSelector(state => state.gameList.games?.length);
   const gameData = useSelector(state => state.import.importData);
-  
-  const readPages = gameData.length;
 
-  const [message, setMessage] = useState('');
+  const readPages = gameData.slice().filter(i => i !== null).length;
+
+  const [message, setMessage] = useState(null);
   const [totalPages, setTotalPages] = useState(-1);
+
+  const videoVisible = totalPages === -1 || readPages - 1 !== totalPages;
+
+  useEffect(() => {
+    dispatch(resetPageData());
+  }, []);
 
   const parseData = () =>
     JSON.parse(
       gunzipSync(Buffer.from(gameData.join(''), 'base64')).toString('utf-8')
     );
-
-  const setDataForPage = (page, data) => {
-    gameData[page] = data;
-
-    if (gameData.length - 1 === totalPages) {
-      try {
-        console.log(parseData());
-      } catch (e) {
-        setMessage("An error occurred: " + e.message);
-      }
-    }
-  };
 
   const handleQRData = qrData => {
     if (!qrData) {
@@ -53,10 +56,13 @@ const Export = ({ t }) => {
 
     const { page, totalPages: qrTotalPages, data } = JSON.parse(qrData);
 
-    setMessage(t('import_modal.read_status.success', { page: page + 1 }));
+    setMessage({
+      key: 'import_modal.read_status.success',
+      params: { page: page + 1 },
+      variant: 'success',
+    });
 
     if (totalPages !== qrTotalPages) {
-      dispatch(resetPageData());
       setTotalPages(qrTotalPages);
     }
 
@@ -75,6 +81,21 @@ const Export = ({ t }) => {
     dispatch(setExportModalVisible(true));
   };
 
+  const handleOverwrite = () => {
+    try {
+      const d = parseData();
+      handleClose();
+      dispatch(setSelectedGame(-1));
+      dispatch(ovewriteGames(d));
+      dispatch(resetPageData());
+    } catch (e) {
+      setMessage({
+        variant: 'danger',
+        key: 'import_modal.import_error',
+      });
+    }
+  };
+
   return (
     <Modal show={show}>
       <ModalHeader>
@@ -82,11 +103,12 @@ const Export = ({ t }) => {
         <CloseButton onClick={handleClose} />
       </ModalHeader>
       <ModalBody className="justify-content-center">
-        <p>{message}</p>
+        <AlertIcon variant="warning"><ExclamationTriangleFill />{t('import_modal.save_game_warning')}</AlertIcon>
+        {message && <AlertIcon variant={message.variant}><CheckCircleFill /> {t(message.key, message.params)}</AlertIcon>}
         <p>
-          Read {readPages} / {totalPages + 1}
+          {t('import_modal.page_progress', {readPages, count: totalPages + 1})}
         </p>
-        {show && readPages - 1 !== totalPages && (
+        {videoVisible && (
           <QrReader
             constraints={{
               aspectRatio: 1,
@@ -96,6 +118,7 @@ const Export = ({ t }) => {
             onResult={handleQRData}
           />
         )}
+        {!videoVisible && <Button onClick={handleOverwrite}>{t('import_modal.action.overwrite')}</Button>}
       </ModalBody>
       <ModalFooter>
         <Button disabled={gamesLength === 0} onClick={handleExport}>

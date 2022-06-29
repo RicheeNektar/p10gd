@@ -4,6 +4,7 @@ import { DashSquare, InfoCircleFill, PlusSquare } from 'react-bootstrap-icons';
 import CardHeader from 'react-bootstrap/esm/CardHeader';
 import { withTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import AlertIcon from '../../components/AlertIcon';
 
 const colors = ['#FFD700', '#C0C0C0', '#CD7F32'];
 
@@ -16,10 +17,10 @@ const GameStats = ({ t }) => {
 
   if (!players || !history) {
     return (
-      <Alert variant="info" className="d-flex gap-2 align-items-center">
+      <AlertIcon variant="info">
         <InfoCircleFill />
         <div>{t("game_stats.no_game_selected")}</div>
-      </Alert>
+      </AlertIcon>
     );
   }
 
@@ -97,10 +98,10 @@ const GameStats = ({ t }) => {
           </h5>
         </CardHeader>
         <div className="card-body">
-          <p>{t('game_stats.player_stats.points', {count: stats.points})}</p>
+          <p>{t('game_stats.player_stats.points', {points: stats.points})}</p>
           <p>
             {stats.phase < 10
-              ? t('game_stats.player_stats.in_progress', {count: stats.phase + 1})
+              ? t('game_stats.player_stats.in_progress', {phase: stats.phase + 1})
               : t('game_stats.player_stats.finished')}
           </p>
           <p>{t('game_stats.player_stats.progress')}</p>
@@ -124,7 +125,7 @@ const GameStats = ({ t }) => {
           {players.map(name => {
             const id = stats.findIndex(p => p.name === name);
             return (
-              <Col className="d-flex align-items-center text-center p-1">
+              <Col key={id} className="d-flex align-items-center text-center p-1">
                 <span className="text-truncate col-4">{name}</span>
                 <span className="badge bg-primary p-1 flex-fill">
                   {stats[id].points}
@@ -134,10 +135,10 @@ const GameStats = ({ t }) => {
             );
           })}
         </Row>
-        {history.map(entries => (
-          <Row className={rowClass}>
+        {history.map((entries, id) => (
+          <Row key={id} className={rowClass}>
             {entries.map((entry, id) => (
-              <Col className="d-flex align-items-center gap-2">
+              <Col key={id} className="d-flex align-items-center gap-2">
                 {entry.points > 0 ? <PlusSquare /> : <DashSquare />}
                 <span
                   className={`flex-fill float-end badge bg-${

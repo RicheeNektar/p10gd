@@ -1,7 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPlayerName, resetForm, setFormError } from './CreateGame.slice';
-import { createGame, setGameSelectionModalVisible } from '../game-list/GameList.slice';
+import {
+  createGame,
+  setGameSelectionModalVisible,
+} from '../game-list/GameList.slice';
 import Alert from 'react-bootstrap/Alert';
 import {
   Col,
@@ -15,8 +18,10 @@ import {
 } from 'react-bootstrap';
 import { setSelectedGame } from '../game-stats/GameStats.slice';
 import { withTranslation } from 'react-i18next';
+import { ExclamationTriangleFill } from 'react-bootstrap-icons';
 
-const ERROR_INVALID_PLAYER_COUNT = 'create_game.form_error.invalid_player_count';
+const ERROR_INVALID_PLAYER_COUNT =
+  'create_game.form_error.invalid_player_count';
 
 const CreateGame = ({ t }) => {
   const playerNames = useSelector(state => state.createGame.names);
@@ -33,13 +38,13 @@ const CreateGame = ({ t }) => {
     playerNameInputs.push(
       <Row key={`player-${i}`}>
         <Col>
-          <label>{t('create_game.player.label', {number: i + 1})}</label>
+          <label>{t('create_game.player.label', { number: i + 1 })}</label>
         </Col>
         <Col>
           <input
             name={`player-${i}`}
             type="text"
-            placeholder={t('create_game.player.placeholder', {number: i + 1})}
+            placeholder={t('create_game.player.placeholder', { number: i + 1 })}
             onChange={e =>
               dispatch(setPlayerName({ id: i, name: e.target.value }))
             }
@@ -51,7 +56,7 @@ const CreateGame = ({ t }) => {
   }
 
   const handleSubmit = e => {
-    const names = playerNames.filter(name => name.match(/\w/));
+    const names = playerNames.map(n => n.trim()).filter(name => name.match(/\w/));
 
     switch (names.length) {
       case 2:
@@ -76,8 +81,11 @@ const CreateGame = ({ t }) => {
       </ModalHeader>
       <ModalBody>
         {formErrors.length > 0 && (
-          <Alert variant="danger" key="errors">
-            <h4>{t('create_game.form_error', {count: formErrors.length})}</h4>
+          <Alert variant="danger">
+            <div className="d-flex align-items-center gap-2">
+              <ExclamationTriangleFill />{' '}
+              <b>{t('create_game.form_error', { count: formErrors.length })}</b>
+            </div>
             <ul>
               {formErrors.map((error, i) => (
                 <li key={i}>{t(error)}</li>
@@ -96,11 +104,12 @@ const CreateGame = ({ t }) => {
           onClick={() => {
             dispatch(resetForm());
             dispatch(setGameSelectionModalVisible(true));
-          }}>
+          }}
+        >
           {t('create_game.actions.cancel')}
         </Button>
         <Button key="continue" type="submit" onClick={handleSubmit}>
-        {t('create_game.actions.create')}
+          {t('create_game.actions.create')}
         </Button>
       </ModalFooter>
     </Modal>
