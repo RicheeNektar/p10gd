@@ -122,9 +122,9 @@ const Export = ({ t }) => {
       </ModalBody>
       <ModalFooter>
         <Button disabled={gamesLength === 0} onClick={handleExport}>
-          {t('import_modal.export')}
+          {t('import_modal.action.export')}
         </Button>
-        <Button onClick={handleBack}>{t('import_modal.back')}</Button>
+        <Button onClick={handleBack}>{t('import_modal.action.back')}</Button>
       </ModalFooter>
     </Modal>
   );

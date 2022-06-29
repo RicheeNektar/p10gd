@@ -39,20 +39,20 @@
     "create_game.player.placeholder": "Spieler {number}",
     "create_game.form_error": "Es gibt {count, plural, =1 {einen Fehler:} other {mehrere Fehler:}}",
     "create_game.form_error.invalid_player_count": "Es werden mindestens 2 Spieler benötigt.",
-    "create_game.actions.create": "Erstellen",
-    "create_game.actions.cancel": "Abbrechen",
+    "create_game.action.create": "Erstellen",
+    "create_game.action.cancel": "Abbrechen",
 
     "export_modal.title": "Export",
-    "export_modal.import": "Importieren",
-    "export_modal.back": "Zurück",
+    "export_modal.action.import": "Importieren",
+    "export_modal.action.back": "Zurück",
 
     "import_modal.title": "Import",
     "import_modal.read_status.success": "Seite {page} wurde erfolgreich gescannt.",
     "import_modal.page_progress.undefined": "Scanne unächst einen QR-Code der Export Seite ein.",
     "import_modal.save_game_warning": "Beim import werden alle vorhandenen Spiele gelöscht.",
     "import_modal.page_progress": "{readPages, plural, =0 {Noch keine} other {#}} von {count, plural, =1 {# Seite} other {# Seiten}} gescannt",
-    "import_modal.overwrite": "Daten überschreiben",
-    "import_modal.export": "Exportieren",
-    "import_modal.back": "Zurück"
+    "import_modal.action.overwrite": "Daten überschreiben",
+    "import_modal.action.export": "Exportieren",
+    "import_modal.action.back": "Zurück"
   }
 }

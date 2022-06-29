@@ -106,10 +106,10 @@ const CreateGame = ({ t }) => {
             dispatch(setGameSelectionModalVisible(true));
           }}
         >
-          {t('create_game.actions.cancel')}
+          {t('create_game.action.cancel')}
         </Button>
         <Button key="continue" type="submit" onClick={handleSubmit}>
-          {t('create_game.actions.create')}
+          {t('create_game.action.create')}
         </Button>
       </ModalFooter>
     </Modal>

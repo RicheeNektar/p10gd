@@ -77,8 +77,8 @@ const Export = ({ t }) => {
         </Pagination>
       </ModalBody>
       <ModalFooter>
-        <Button onClick={handleImport}>{t('export_modal.import')}</Button>
-        <Button onClick={handleBack}>{t('export_modal.back')}</Button>
+        <Button onClick={handleImport}>{t('export_modal.action.import')}</Button>
+        <Button onClick={handleBack}>{t('export_modal.action.back')}</Button>
       </ModalFooter>
     </Modal>
   );

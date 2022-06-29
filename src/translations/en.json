@@ -39,12 +39,12 @@
     "create_game.player.placeholder": "Player {number}",
     "create_game.form_error": "There {count, plural, =1 {is an error:} other {are multiple errors:}}",
     "create_game.form_error.invalid_player_count": "At least 2 player names are required.",
-    "create_game.actions.create": "Create",
-    "create_game.actions.cancel": "Cancel",
+    "create_game.action.create": "Create",
+    "create_game.action.cancel": "Cancel",
 
     "export_modal.title": "Export",
-    "export_modal.back": "Back",
-    "export_modal.import": "Import",
+    "export_modal.action.back": "Back",
+    "export_modal.action.import": "Import",
 
     "import_modal.title": "Importieren",
     "import_modal.read_status.success": "Page {page} read successfully.",
@@ -52,7 +52,7 @@
     "import_modal.save_game_warning": "All saved games will be overwritten.",
     "import_modal.page_progress": "{readPages, plural, =0 {No pages scanned yet} other {Scanned # / {count}}}",
     "import_modal.overwrite": "Overwrite saves",
-    "import_modal.export": "Export",
-    "import_modal.back": "Back"
+    "import_modal.action.export": "Export",
+    "import_modal.action.back": "Back"
   }
 }
