@@ -12,7 +12,7 @@ const slice = createSlice({
   reducers: {
     createGame: (state, { payload: playerNames }) => {
       state.games.push({
-        time: new Date(),
+        time: new Date().toISOString(),
         players: playerNames,
         history: [],
       });
