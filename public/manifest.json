@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
   "short_name": "P10GD",
   "name": "Phase 10 GameData",
   "icons": [
@@ -11,5 +12,6 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#0D6EFD",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "lang": "en"
 }
