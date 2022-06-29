@@ -90,7 +90,7 @@
                   .map((game, i) => (
                     <Card key={i}>
                       <CardHeader>
-                        {t('game_list.game.created', { time: new Date(game.time).toLocaleString(i18n.language) })}
+                        {t('game_list.game.created', { time: game.time.toLocaleString(i18n.language) })}
                       </CardHeader>
                       <div className="card-body">
                         <span>
