@@ -51,7 +51,7 @@
     "import_modal.page_progress.undefined": "Scan at least one of the export pages.",
     "import_modal.save_game_warning": "All saved games will be overwritten.",
     "import_modal.page_progress": "{readPages, plural, =0 {No pages scanned yet} other {Scanned # / {count}}}",
-    "import_modal.overwrite": "Overwrite saves",
+    "import_modal.action.overwrite": "Overwrite saves",
     "import_modal.action.export": "Export",
     "import_modal.action.back": "Back"
   }

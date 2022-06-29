@@ -66,7 +66,7 @@ const generateGame = () => {
   const history = generateHistory(players);
 
   return {
-    created: new Date(),
+    time: new Date().toISOString(),
     players,
     history,
   };
