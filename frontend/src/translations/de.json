@@ -1,0 +1,60 @@
+{
+  "translation": {
+    "app.title": "Phase 10 Game Data",
+    "app.round_over": "Runde vorbei",
+    "app.show_games": "Spiele anzeigen",
+
+    "game_stats.no_game_selected": "Erstelle oder wähle zunächst ein Spiel aus.",
+    "game_stats.game_stats": "Spielübersicht",
+    "game_stats.player_stats.points": "Hat {points, plural, =0 {keine} other {#}} Punkte",
+    "game_stats.player_stats.in_progress": "Benötigt Phase {phase} von 10",
+    "game_stats.player_stats.finished": "Hat alle Phasen geschafft",
+    "game_stats.player_stats.progress": "Fortschritt:",
+
+    "game_stats.game_history": "Punkteverlauf",
+
+    "round_over.modal_title": "Rundenergebnisse eintragen",
+    "round_over.input.points": "Punkte:",
+    "round_over.input.phase": "Phase geschafft:",
+    "round_over.apply": "Speichern",
+    "round_over.cancel": "Abbrechen",
+
+    "game_list.modal_title": "Spiele",
+    "game_list.no_games": "Du hast noch kein Spiel erstellt.",
+    "game_list.game.created": "Erstellt am {time}",
+    "game_list.game.players": "Spieler: {players}",
+    "game_list.action.select": "Auswählen",
+    "game_list.action.delete": "Löschen",
+    "game_list.action.create_game": "Spiel erstellen",
+    "game_list.action.import": "Importieren",
+    "game_list.action.export": "Exportieren",
+
+    "game_list.delete_game.modal_title": "Bist du sicher?",
+    "game_list.delete_game.text": "Bist du dir sicher, dass du das Spiel löschen möchtest?",
+    "game_list.delete_game.confirm": "Löschen",
+    "game_list.delete_game.cancel": "Abbrechen",
+
+    "create_game.modal_title": "Spiel erstellen",
+    "create_game.player.label": "Spieler {number}",
+    "create_game.player.placeholder": "Spieler {number}",
+    "create_game.form_error": "Es gibt {count, plural, =1 {einen Fehler:} other {mehrere Fehler:}}",
+    "create_game.form_error.invalid_player_count": "Es werden mindestens 2 Spieler benötigt.",
+    "create_game.action.create": "Erstellen",
+    "create_game.action.cancel": "Abbrechen",
+
+    "export_modal.title": "Export",
+    "export_modal.action.back": "Zurück",
+    "export_modal.action.import": "Importieren",
+    "export_modal.close_notice": "Dises Fenster bitte nicht schließen, sobald der download auf einem anderen Gerät begonnen hat.",
+
+    "import_modal.title": "Import",
+    "import_modal.instruction.scan": "Halte einen QR-Code vor die Kamera.",
+    "import_modal.save_game_warning": "Beim import werden alle vorhandenen Spiele gelöscht.",
+    "import_modal.working": "Bitte warten...",
+    "import_modal.downloading": "{chunks, plural, =1 {Einen Teil} other {# Teile}} von {total, plural, =1 {einem Teil} other {# Teilen}} heruntergeladen",
+    "import_modal.download_cancel_info": "Am Ende des Downloads kannst du fortfahren oder abbrechen.",
+    "import_modal.action.overwrite": "Daten überschreiben",
+    "import_modal.action.export": "Exportieren",
+    "import_modal.action.back": "Zurück"
+  }
+}
