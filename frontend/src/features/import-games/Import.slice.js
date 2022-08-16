@@ -80,6 +80,7 @@ export const updateMediaDevices = createAsyncThunk(
       .map(device => ({ id: device.deviceId, label: device.label }));
 
     if (devices[0].label === '') {
+      navigator.mediaDevices.getUserMedia({video: true});
       return api.rejectWithValue('no_cam_permission');
     }
 
