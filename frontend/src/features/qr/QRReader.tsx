@@ -1,7 +1,7 @@
 import jsQR from 'jsqr';
 import { useEffect, useRef, useState } from 'react';
 
-const QRReader = ({ deviceId, onData }) => {
+const QRReader = ({ deviceId, onData, onError }) => {
   const videoRef = useRef<HTMLVideoElement>();
   const canvasRef = useRef<HTMLCanvasElement>();
   const [mediaStream, setMediaStream] = useState(null as MediaStream);
@@ -25,7 +25,8 @@ const QRReader = ({ deviceId, onData }) => {
         videoRef.current.srcObject = stream;
         setMediaStream(stream);
         setVideoTrack(stream.getVideoTracks().find(track => track.enabled));
-      });
+      })
+      .catch(onError);
   }, [deviceId]);
 
   useEffect(() => {
@@ -36,18 +37,20 @@ const QRReader = ({ deviceId, onData }) => {
     const capture = new ImageCapture(videoTrack);
 
     const id = setInterval(() => {
-      capture.grabFrame().then(bitmap => {
-        const canvas = canvasRef.current;
-        canvas.width = bitmap.width;
-        canvas.height = bitmap.height;
+      if (capture.track.readyState === 'live') {
+        capture.grabFrame().then(bitmap => {
+          const canvas = canvasRef.current;
+          canvas.width = bitmap.width;
+          canvas.height = bitmap.height;
 
-        const context = canvas.getContext("2d");
-        context.drawImage(bitmap, 0, 0);
-        const imageData = context.getImageData(0, 0, bitmap.width, bitmap.height);
+          const context = canvas.getContext("2d");
+          context.drawImage(bitmap, 0, 0);
+          const imageData = context.getImageData(0, 0, bitmap.width, bitmap.height);
 
-        const qr = jsQR(imageData.data, bitmap.width, bitmap.height);
-        onData(qr?.data);
-      });
+          const qr = jsQR(imageData.data, bitmap.width, bitmap.height);
+          onData(qr?.data);
+        });
+      }
     }, 1000);
 
     return () => clearInterval(id);

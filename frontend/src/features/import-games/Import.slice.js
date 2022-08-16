@@ -57,7 +57,6 @@ export const downloadChunks = createAsyncThunk(
         enc.Utf8
       );
       return api.fulfillWithValue(JSON.parse(decrypted));
-      
     } catch (e) {
       console.debug(e);
       return api.rejectWithValue(
@@ -75,10 +74,17 @@ export const downloadChunks = createAsyncThunk(
 
 export const updateMediaDevices = createAsyncThunk(
   'input/update-media-devices',
-  async () =>
-    (await navigator.mediaDevices.enumerateDevices())
+  async (_, api) => {
+    const devices = (await navigator.mediaDevices.enumerateDevices())
       .filter(device => device.kind === 'videoinput')
-      .map(device => ({ id: device.deviceId, label: device.label }))
+      .map(device => ({ id: device.deviceId, label: device.label }));
+
+    if (devices[0].label === '') {
+      return api.rejectWithValue('no_cam_permission');
+    }
+
+    return api.fulfillWithValue(devices);
+  }
 );
 
 const slice = createSlice({
@@ -125,6 +131,12 @@ const slice = createSlice({
     reducers.addCase(updateMediaDevices.fulfilled, (state, { payload }) => {
       state.devices = payload;
       state.selectedDevice = payload[0];
+    });
+
+    reducers.addCase(updateMediaDevices.rejected, (state, { payload }) => {
+      state.devices = [];
+      state.selectedDevice = null;
+      state.error = payload;
     });
   },
 });

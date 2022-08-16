@@ -58,6 +58,8 @@ const Import = ({ t }) => {
     }
   };
 
+  const handleReaderError = e => {};
+
   const handleClose = () => {
     dispatch(setImportModalVisible(false));
   };
@@ -91,10 +93,15 @@ const Import = ({ t }) => {
               <InfoCircleFill />
               {t(`import_modal.error.${error}`)}
             </AlertIcon>
-            <Button onClick={() => dispatch(reset())}>{t('import_modal.action.retry')}</Button>
+            <Button
+              onClick={() => {
+                dispatch(updateMediaDevices());
+                dispatch(reset());
+              }}
+            >
+              {t('import_modal.action.retry')}
+            </Button>
           </>
-        ) : !selectedDevice ? (
-          <p>{t('import_modal.instruction.select')}</p>
         ) : (
           devices &&
           selectedDevice &&
@@ -120,7 +127,11 @@ const Import = ({ t }) => {
                 ))}
               </FormSelect>
               <p>{t('import_modal.instruction.scan')}</p>
-              <QRReader onData={handleQRData} deviceId={selectedDevice.id} />
+              <QRReader
+                onData={handleQRData}
+                onError={handleReaderError}
+                deviceId={selectedDevice.id}
+              />
             </>
           )
         )}
