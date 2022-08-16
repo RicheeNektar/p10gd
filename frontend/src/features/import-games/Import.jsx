@@ -27,7 +27,7 @@ import { ExclamationTriangleFill, InfoCircleFill } from 'react-bootstrap-icons';
 import AlertIcon from '../../components/AlertIcon';
 import { setSelectedGame } from '../game-stats/GameStats.slice';
 import { overwriteGames } from '../game-list/GameList.slice';
-import QRReader from '../qr-reader/QRReader.tsx';
+import QRReader from '../qr/QRReader.tsx';
 
 const Import = ({ t }) => {
   const dispatch = useDispatch();
@@ -155,9 +155,8 @@ const Import = ({ t }) => {
             <AlertIcon variant="warning">
               <ExclamationTriangleFill />
               {t('import_modal.save_game_warning')}
-              <Button variant="close" onClick={console.log}></Button>
             </AlertIcon>
-            <Button onClick={handleOverwrite}>
+            <Button variant="warning" onClick={handleOverwrite}>
               {t('import_modal.action.overwrite')}
             </Button>
           </>

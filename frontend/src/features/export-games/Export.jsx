@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Button,
   CloseButton,
@@ -13,16 +13,15 @@ import { withTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteBackup,
-  dropBackup,
   prepareBackup,
   setExportModalVisible,
 } from './Export.slice';
 import { setGameSelectionModalVisible } from '../game-list/GameList.slice';
 import { setImportModalVisible } from '../import-games/Import.slice';
 import { useEffect } from 'react';
-import QRCode from 'react-qr-code';
 import AlertIcon from '../../components/AlertIcon';
 import { InfoCircleFill } from 'react-bootstrap-icons';
+import QRCode from '../qr/QRCode.tsx';
 
 const Export = ({ t }) => {
   const dispatch = useDispatch();
