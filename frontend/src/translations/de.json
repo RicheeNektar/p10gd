@@ -60,6 +60,7 @@
     "import_modal.error.backup_not_found": "Der Server kennt dieses Backup nicht.",
     "import_modal.error.invalid_server_response": "Die API hat eine invalide Antwort gesendet.",
     "import_modal.error.chunk_not_found": "Konnte einen Chunk nicht herunterladen. Nein, ich bin nicht darauf programmiert, dies auszubaden.",
+    "import_modal.error.no_cam_permission": "Du musst die Berechtigung für den Kamerazugriff erteilen.",
     "import_modal.error.unknown": "Ein unbekannter Fehler ist aufgetreten."
   }
 }
