@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button,
+  ButtonGroup,
   CloseButton,
+  FormSelect,
   Modal,
   ModalBody,
   ModalFooter,
@@ -14,12 +16,18 @@ import { withTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { setGameSelectionModalVisible } from '../game-list/GameList.slice';
 import { setExportModalVisible } from '../export-games/Export.slice';
-import { downloadChunks, setImportModalVisible, reset } from './Import.slice';
-import { QrReader } from 'react-qr-reader';
+import {
+  downloadChunks,
+  setImportModalVisible,
+  reset,
+  updateMediaDevices,
+  setSelectedDevice,
+} from './Import.slice';
 import { ExclamationTriangleFill, InfoCircleFill } from 'react-bootstrap-icons';
 import AlertIcon from '../../components/AlertIcon';
 import { setSelectedGame } from '../game-stats/GameStats.slice';
 import { overwriteGames } from '../game-list/GameList.slice';
+import QRReader from '../qr-reader/QRReader.tsx';
 
 const Import = ({ t }) => {
   const dispatch = useDispatch();
@@ -27,20 +35,24 @@ const Import = ({ t }) => {
   const downloading = useSelector(state => state.import.isDownloading);
   const backup = useSelector(state => state.import.backup);
   const { toDownload, downloaded } = useSelector(state => state.import.status);
+  const error = useSelector(state => state.import.error);
+  const devices = useSelector(state => state.import.devices);
+  const selectedDevice = useSelector(state => state.import.selectedDevice);
 
   useEffect(() => {
     if (!downloading) {
       dispatch(reset());
     }
+    dispatch(updateMediaDevices());
   }, []);
 
-  const handleQRData = qrData => {
-    if (!qrData) {
+  const handleQRData = data => {
+    if (!data) {
       return;
     }
 
     try {
-      dispatch(downloadChunks(JSON.parse(qrData.text)));
+      dispatch(downloadChunks(JSON.parse(data)));
     } catch (e) {
       console.error(e);
     }
@@ -73,18 +85,44 @@ const Import = ({ t }) => {
         {!downloading && <CloseButton onClick={handleClose} />}
       </ModalHeader>
       <ModalBody className="justify-content-center">
-        {!backup && !downloading && (
+        {error ? (
           <>
-            <p>{t('import_modal.instruction.scan')}</p>
-            <QrReader
-              constraints={{
-                aspectRatio: 1,
-                frameRate: 10,
-                facingMode: 'environment',
-              }}
-              onResult={handleQRData}
-            />
+            <AlertIcon>
+              <InfoCircleFill />
+              {t(`import_modal.error.${error}`)}
+            </AlertIcon>
+            <Button onClick={() => dispatch(reset())}>{t('import_modal.action.retry')}</Button>
           </>
+        ) : !selectedDevice ? (
+          <p>{t('import_modal.instruction.select')}</p>
+        ) : (
+          devices &&
+          selectedDevice &&
+          !backup &&
+          !downloading && (
+            <>
+              <FormSelect
+                value={selectedDevice.label}
+                onChange={e =>
+                  dispatch(
+                    setSelectedDevice(
+                      devices.find(
+                        device => e.target.selectedOptions[0].id === device.id
+                      )
+                    )
+                  )
+                }
+              >
+                {devices.map(device => (
+                  <option id={device.id} key={device.id}>
+                    {device.label}
+                  </option>
+                ))}
+              </FormSelect>
+              <p>{t('import_modal.instruction.scan')}</p>
+              <QRReader onData={handleQRData} deviceId={selectedDevice.id} />
+            </>
+          )
         )}
         {downloading && (
           <>
@@ -117,6 +155,7 @@ const Import = ({ t }) => {
             <AlertIcon variant="warning">
               <ExclamationTriangleFill />
               {t('import_modal.save_game_warning')}
+              <Button variant="close" onClick={console.log}></Button>
             </AlertIcon>
             <Button onClick={handleOverwrite}>
               {t('import_modal.action.overwrite')}
@@ -132,7 +171,7 @@ const Import = ({ t }) => {
             <Button disabled={gamesLength === 0} onClick={handleExport}>
               {t('import_modal.action.export')}
             </Button>
-            <Button onClick={handleBack}>
+            <Button variant="secondary" onClick={handleBack}>
               {t('import_modal.action.back')}
             </Button>
           </>

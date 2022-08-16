@@ -72,7 +72,7 @@ const generateGame = () => {
   };
 };
 
-const gameCount = 2;
+const gameCount = 8;
 const games = [];
 
 for (let i = 0; i < gameCount; i++) {

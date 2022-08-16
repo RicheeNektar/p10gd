@@ -55,6 +55,11 @@
     "import_modal.download_cancel_info": "You can continue or cancel once the download has completed.",
     "import_modal.action.overwrite": "Overwrite saves",
     "import_modal.action.export": "Export",
-    "import_modal.action.back": "Back"
+    "import_modal.action.back": "Back",
+    "import_modal.action.retry": "Retry",
+    "import_modal.error.backup_not_found": "The server does not recognise this backup.",
+    "import_modal.error.invalid_server_response": "The API sent an invalid response.",
+    "import_modal.error.chunk_not_found": "Failed downloading a chunk. No, I am not programmed to handle this.",
+    "import_modal.error.unknown": "An unknown error has occurred."
   }
 }

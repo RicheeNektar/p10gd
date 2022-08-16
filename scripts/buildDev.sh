@@ -1,6 +1,9 @@
 #!/bin/bash
+composer install
+
 cd frontend
 
+yarn install
 yarn build
 
 rm -r ../public/static

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { AES, enc, format } from 'crypto-js';
+import { AES, enc } from 'crypto-js';
 import { get } from 'jquery';
 
 const flexibleState = {
@@ -7,7 +7,7 @@ const flexibleState = {
     toDownload: -1,
     downloaded: -1,
   },
-  error: false,
+  error: null,
   backup: null,
 };
 
@@ -15,6 +15,8 @@ const initialState = {
   ...flexibleState,
   modalVisible: false,
   isDownloading: false,
+  devices: null,
+  selectedDevice: null,
 };
 
 export const downloadChunks = createAsyncThunk(
@@ -28,16 +30,22 @@ export const downloadChunks = createAsyncThunk(
         key,
       });
 
+      if (!chunks) {
+        throw new Error('invalid_server_response');
+      }
+
       console.debug('chunks:', chunks);
       api.dispatch(setStatus({ toDownload: chunks, downloaded: -1 }));
 
       const dataDownload = [];
       for (let i = 0; i < chunks; i++) {
-        dataDownload.push(await get('/api/chunk', {
+        const chunk = await get('/api/chunk', {
           id,
           key,
           chunk_number: i,
-        }));
+        });
+
+        dataDownload.push(chunk);
         api.dispatch(setStatus({ downloaded: i }));
         console.debug('Downloaded chunk', i);
       }
@@ -45,16 +53,32 @@ export const downloadChunks = createAsyncThunk(
       const data = dataDownload.join('');
       console.debug(typeof data, data.length);
 
-      const decKey = `${guid}${id}${key}`;
-      const decrypted = AES.decrypt(data, decKey).toString(enc.Utf8);
-
-      const games = JSON.parse(decrypted);
-      return api.fulfillWithValue(games);
+      const decrypted = AES.decrypt(data, `${guid}${id}${key}`).toString(
+        enc.Utf8
+      );
+      return api.fulfillWithValue(JSON.parse(decrypted));
+      
     } catch (e) {
       console.debug(e);
-      return api.rejectWithValue(e);
+      return api.rejectWithValue(
+        e?.responseJSON?.error ?? e?.message ?? 'unknown'
+      );
     }
+  },
+  {
+    condition: (_arg, api) => {
+      const state = api.getState().import;
+      return !state.error && !state.isDownloading;
+    },
   }
+);
+
+export const updateMediaDevices = createAsyncThunk(
+  'input/update-media-devices',
+  async () =>
+    (await navigator.mediaDevices.enumerateDevices())
+      .filter(device => device.kind === 'videoinput')
+      .map(device => ({ id: device.deviceId, label: device.label }))
 );
 
 const slice = createSlice({
@@ -73,10 +97,15 @@ const slice = createSlice({
         ...payload,
       };
     },
+    setSelectedDevice: (state, { payload }) => {
+      state.selectedDevice = payload;
+    },
     reset: state => {
       state.isDownloading = false;
-      Object.keys(flexibleState).forEach(key => state[key] = flexibleState[key]);
-    }
+      Object.keys(flexibleState).forEach(
+        key => (state[key] = flexibleState[key])
+      );
+    },
   },
   extraReducers: reducers => {
     reducers.addCase(downloadChunks.pending, state => {
@@ -92,9 +121,20 @@ const slice = createSlice({
       state.isDownloading = false;
       state.error = payload;
     });
+
+    reducers.addCase(updateMediaDevices.fulfilled, (state, { payload }) => {
+      state.devices = payload;
+      state.selectedDevice = payload[0];
+    });
   },
 });
 
-export const { setImportModalVisible, setBackup, setStatus, reset } = slice.actions;
+export const {
+  setSelectedDevice,
+  setImportModalVisible,
+  setBackup,
+  setStatus,
+  reset,
+} = slice.actions;
 
 export default slice.reducer;

@@ -55,6 +55,11 @@
     "import_modal.download_cancel_info": "Am Ende des Downloads kannst du fortfahren oder abbrechen.",
     "import_modal.action.overwrite": "Daten überschreiben",
     "import_modal.action.export": "Exportieren",
-    "import_modal.action.back": "Zurück"
+    "import_modal.action.back": "Zurück",
+    "import_modal.action.retry": "Erneut versuchen",
+    "import_modal.error.backup_not_found": "Der Server kennt dieses Backup nicht.",
+    "import_modal.error.invalid_server_response": "Die API hat eine invalide Antwort gesendet.",
+    "import_modal.error.chunk_not_found": "Konnte einen Chunk nicht herunterladen. Nein, ich bin nicht darauf programmiert, dies auszubaden.",
+    "import_modal.error.unknown": "Ein unbekannter Fehler ist aufgetreten."
   }
 }

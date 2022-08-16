@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Alert,
   Button,
   CloseButton,
   Modal,
@@ -23,7 +22,7 @@ import { setImportModalVisible } from '../import-games/Import.slice';
 import { useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import AlertIcon from '../../components/AlertIcon';
-import { ExclamationTriangleFill, InfoCircleFill } from 'react-bootstrap-icons';
+import { InfoCircleFill } from 'react-bootstrap-icons';
 
 const Export = ({ t }) => {
   const dispatch = useDispatch();
